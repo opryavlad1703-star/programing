@@ -1,5 +1,2 @@
-### Результат виконання (var_dump)
+### Результат виконання (var_dump) Папка uploads у VS Code
 ![Скріншот var_dump](assets/screen1.png)
-
-### Папка uploads у VS Code
-![Скріншот папки uploads](assets/screen2.png)
