@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TechShop — Комп'ютерний маркетплейс</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./assets/css/style.css">
+</head>
+<body>
+
+    <header class="header">
+        <div class="header-container">
+            <div class="logo">TechShop<span>.</span></div>
+            <nav class="nav">
+                <a href="index.html" class="nav-link">Каталог</a>
+                <button id="themeToggleBtn" class="btn btn-icon" aria-label="Перемкнути тему">
+                    <span class="theme-icon">🌙</span>
+                </button>
+                <button class="btn btn-primary btn-cart" id="openCartBtn">
+                    🛒 Кошик (<span id="cartCountBadge">0</span>)
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <main class="main-container">
+        
+        <!-- Секція пошуку та фільтрів -->
+        <div class="search-section" style="flex-wrap: wrap;">
+            <input type="text" id="searchInput" class="search-input" placeholder="Пошук комплектуючих...">
+            
+            <!-- Фільтр за категоріями -->
+            <select id="categoryFilter" class="search-input" style="max-width: 200px; cursor: pointer;">
+                <option value="all">Усі категорії</option>
+                <option value="Комплектуючі">Комплектуючі</option>
+                <option value="Периферія">Периферія</option>
+                <option value="Гаджети">Гаджети</option>
+            </select>
+
+            <!-- Фільтр за ціною -->
+            <div class="price-filter-box" style="display: flex; align-items: center; gap: 10px; background: var(--bg-card); padding: 8px 16px; border: 2px solid var(--border-color); border-radius: var(--radius-md);">
+                <label for="priceRange" style="font-size: 0.9rem; font-weight: 600;">До ціни: $<span id="priceLimitVal">400</span></label>
+                <input type="range" id="priceRange" min="50" max="400" step="10" value="400" style="cursor: pointer;">
+            </div>
+
+            <span id="searchResultCount" class="search-count"></span>
+        </div>
+
+        <div class="loader-container" id="loader" style="display: none;">
+            <div class="spinner"></div>
+            <p>Завантаження каталогів...</p>
+        </div>
+
+        <div id="products-grid" class="products-grid"></div>
+
+        <div class="favorites-zone" id="favoritesZone">
+            <div class="fav-placeholder">
+                <span class="fav-icon">❤️</span>
+                <p>Перетягніть сюди товари в Улюблене</p>
+            </div>
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <div class="footer-top">
+            <div class="footer-logo-area">
+                <div class="footer-logo">TechShop<span>.</span></div>
+                <p class="footer-slogan">Більше, ніж магазин техніки. Ваш партнер у світі комп'ютерних технологій.</p>
+            </div>
+            <div class="footer-subscribe">
+                <h3>Підпишись на розсилку та отримуй спецпропозиції</h3>
+                <form class="subscribe-form" onsubmit="event.preventDefault(); alert('Дякуємо за підписку!');">
+                    <input type="email" placeholder="Введіть свій e-mail" required>
+                    <button type="submit" class="btn btn-primary">Підписатися</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="footer-grid">
+            <div class="footer-col">
+                <h4>Покупцям</h4>
+                <ul>
+                    <li><a href="#">Доставка</a></li>
+                    <li><a href="#">Оплата</a></li>
+                    <li><a href="#">Гарантії</a></li>
+                    <li><a href="#">Повернення товару</a></li>
+                    <li><a href="#">Бонусна програма</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h4>Про компанію</h4>
+                <ul>
+                    <li><a href="#">Про нас</a></li>
+                    <li><a href="#">Контакти</a></li>
+                    <li><a href="#">Партнерство</a></li>
+                    <li><a href="#">Вакансії</a></li>
+                    <li><a href="#">Блог</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h4>Контакти та підтримка</h4>
+                <p class="footer-phone">📞 +38 (067) 400-08-80</p>
+                <p class="footer-phone">📞 +38 (044) 392-84-94</p>
+                <p class="footer-time">Пн-Нд: 09:00 - 21:00</p>
+                <p class="footer-email">support@techshop.ua</p>
+            </div>
+
+            <div class="footer-col">
+                <h4>Давайте дружити</h4>
+                <div class="social-links">
+                    <a href="#" class="social-btn">Facebook</a>
+                    <a href="#" class="social-btn">Instagram</a>
+                    <a href="#" class="social-btn">Telegram</a>
+                    <a href="#" class="social-btn">YouTube</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <p>&copy; 2026 TechShop. Усі права захищені.</p>
+        </div>
+    </footer>
+
+    <div class="modal-overlay hidden" id="cartOverlay">
+        <div class="modal-window">
+            <div class="modal-header">
+                <h2>Ваше замовлення</h2>
+                <button class="close-btn" id="closeCartBtn">&times;</button>
+            </div>
+
+            <div class="cart-items" id="cartItemsContainer">
+                <p class="empty-cart-msg">Кошик порожній.</p>
+            </div>
+
+            <div class="modal-footer">
+                <div class="cart-total-box">
+                    <span>До сплати:</span>
+                    <span class="total-sum">$<span id="cartTotalSum">0.00</span></span>
+                </div>
+
+                <form id="checkoutOrderForm" class="checkout-form" novalidate>
+                    <div class="form-row">
+                        <label for="clientName">ПІБ покупця</label>
+                        <input type="text" id="clientName" name="clientName" placeholder="Введіть ПІБ" required>
+                        <span class="input-error" id="nameError"></span>
+                    </div>
+
+                    <div class="form-row">
+                        <label for="clientPhone">Номер телефону</label>
+                        <input type="tel" id="clientPhone" name="clientPhone" placeholder="+380..." required>
+                        <span class="input-error" id="phoneError"></span>
+                    </div>
+
+                    <div class="form-row">
+                        <label for="clientEmail">Електронна пошта</label>
+                        <input type="email" id="clientEmail" name="clientEmail" placeholder="email@example.com" required>
+                        <span class="input-error" id="emailError"></span>
+                    </div>
+
+                    <div class="form-row">
+                        <label for="orderPromo">Промокод (якщо є)</label>
+                        <input type="text" id="orderPromo" name="orderPromo" placeholder="Наприклад: SALE10">
+                    </div>
+
+                    <button type="submit" id="btnPlaceOrder" class="btn btn-success btn-full">Підтвердити замовлення</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="./assets/scripts/main.js"></script>
+</body>
+</html>
